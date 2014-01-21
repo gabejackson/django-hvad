@@ -301,11 +301,11 @@ class TableNameTest(NaniTestCase):
         from django.db import models
         from django.conf import settings
         sep = getattr(settings, 'NANI_TABLE_NAME_SEPARATOR', '_')
-        class MyModel(TranslatableModel):
+        class MyModel3(TranslatableModel):
             translations = TranslatedFields(
                 hello = models.CharField(max_length=128)
             )
-        self.assertEqual(MyModel.translations.related.model._meta.db_table, 'tests_mymodel%stranslation' % sep)
+        self.assertTrue(MyModel3.translations.related.model._meta.db_table.endswith('mymodel3%stranslation' % sep))
 
     def test_table_name_override(self):
         from hvad.models import TranslatedFields
@@ -315,7 +315,7 @@ class TableNameTest(NaniTestCase):
                 translations = TranslatedFields(
                     hello = models.CharField(max_length=128)
                 )
-            self.assertEqual(MyOtherModel.translations.related.model._meta.db_table, 'tests_myothermodelO_Otranslation')
+            self.assertTrue(MyOtherModel.translations.related.model._meta.db_table.endswith('myothermodelO_Otranslation'))
 
     def test_table_name_from_meta(self):
         from hvad.models import TranslatedFields

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import django
 from django.core.exceptions import FieldError
 from django.db import models
 from django.db.models.query_utils import Q
@@ -101,7 +102,11 @@ class StandardToTransFKTest(NaniTestCase, TwoNormalOneStandardMixin):
     def test_lookup_by_non_existing_field(self):
         en = Normal.objects.language('en').get(pk=1)
         with LanguageOverride('en'):
-            self.assertRaises(FieldError, Standard.objects.get,
+            if django.VERSION >= (1,7):
+                self.assertRaises(TypeError, Standard.objects.get,
+                              normal__non_existing_field=1)
+            else:
+                self.assertRaises(FieldError, Standard.objects.get,
                               normal__non_existing_field=1)
         
 

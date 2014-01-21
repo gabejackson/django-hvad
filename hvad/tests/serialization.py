@@ -35,7 +35,7 @@ class PicklingTest(NaniTestCase):
         with LanguageOverride('en'):
             normal = Normal.objects.create(
                 shared_field="Shared",
-                translated_field = "English",
+                translated_field="English",
             )
         serialized_repr = pickle.dumps(normal)
 
@@ -59,7 +59,7 @@ class PicklingTest(NaniTestCase):
         with LanguageOverride('en'):
             normal = Normal.objects.create(
                 shared_field="Shared",
-                translated_field = "English",
+                translated_field="English",
             )
         qs = Normal.objects.all()
         serialized_repr = pickle.dumps(qs)
@@ -72,7 +72,7 @@ class PicklingTest(NaniTestCase):
         with LanguageOverride('en'):
             normal = Normal.objects.create(
                 shared_field="Shared",
-                translated_field = "English",
+                translated_field="English",
             )
         qs = Normal.objects.language('en').all()
         serialized_repr = pickle.dumps(qs)

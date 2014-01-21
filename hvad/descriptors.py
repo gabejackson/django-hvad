@@ -29,6 +29,7 @@ class TranslatedAttribute(BaseDescriptor):
         
     def __get__(self, instance, instance_type=None):
         if not instance:
+            raise AttributeError("no such attribute")
             # Don't raise an attribute error so we can use it in admin.
             return self.opts.translations_model._meta.get_field_by_name(
                                                     self.name)[0].default
