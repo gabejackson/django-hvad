@@ -70,5 +70,7 @@ def configure(**extra):
     )
     defaults.update(extra)
     settings.configure(**defaults)
+    if django.VERSION >= (1,7):
+        django.setup()
     from django.contrib import admin
     admin.autodiscover()

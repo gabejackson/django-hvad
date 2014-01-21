@@ -97,14 +97,17 @@ class TranslationQueryset(QuerySet):
         DateQuerySet: DatesMixin,
     }
     
-    def __init__(self, model=None, query=None, using=None, real=None):
+    def __init__(self, model=None, query=None, using=None, real=None, hints=None):
         self._local_field_names = None
         self._field_translator = None
         self._real_manager = real
         self._fallback_manager = None
         self._language_code = None
         self._forced_unique_fields = []  # Used for select_related
-        super(TranslationQueryset, self).__init__(model=model, query=query, using=using)
+        if django.VERSION >= (1,7):
+            super(TranslationQueryset, self).__init__(model=model, query=query, using=using, hints=hints)
+        else:
+            super(TranslationQueryset, self).__init__(model=model, query=query, using=using)
 
         # After super(), make sure we retrieve the shared model:
         if not self.query.select_related:
@@ -237,7 +240,10 @@ class TranslationQueryset(QuerySet):
         found = False
         for node in children:
             try:
-                field_name = node[0].field.name
+                if django.VERSION >= (1,7):
+                    field_name = node.lhs.target.name
+                else:
+                    field_name = node[0].field.name
             except TypeError:
                 if node.children:
                     found = self._scan_for_language_where_node(node.children)
