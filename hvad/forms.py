@@ -184,8 +184,7 @@ class TranslatableModelForm(with_metaclass(TranslatableModelFormMetaclass, Model
 
         trans = construct_instance(self, trans, self._meta.fields)
         trans.language_code = language_code
-        trans.master = self.instance
-        self.instance = combine(trans, self.Meta.model)
+        self.instance = combine(trans, self.Meta.model, self.instance)
 
         super(TranslatableModelForm, self).save(commit=commit)
         return self.instance
@@ -399,6 +398,7 @@ def translationformset_factory(model, **kwargs):
     defaults = {
         'formset': BaseTranslationFormSet,
         'fk_name': 'master',
+        'exclude': [],
     }
     defaults.update(kwargs)
     return inlineformset_factory(model, model._meta.translations_model, **defaults)

@@ -3,7 +3,7 @@ from django.db.models.fields import FieldDoesNotExist
 from django.utils.translation import get_language
 from hvad.exceptions import WrongManager
 
-def combine(trans, klass):
+def combine(trans, klass, master=None):
     """
     'Combine' the shared and translated instances by setting the translation
     on the 'translations_cache' attribute of the shared instance and returning
@@ -11,7 +11,10 @@ def combine(trans, klass):
 
     The result is casted to klass (needed for proxy models).
     """
-    combined = trans.master
+    if master:
+        combined = master
+    else:
+        combined = trans.master
     if klass._meta.proxy:
         combined.__class__ = klass
     opts = combined._meta
